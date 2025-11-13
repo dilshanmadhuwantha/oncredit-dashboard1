@@ -1,129 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel – Oncredit</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
-  <style>
-    :root{--bg:#f8fafc;--text:#1e293b;--card:#fff;--primary:#4361ee;--success:#10b981;--danger:#ef4444;--shadow:0 10px 30px rgba(0,0,0,.1);--radius:12px;}
-    [data-theme="dark"]{--bg:#0f172a;--text:#e2e8f0;--card:#1e293b;--primary:#3b82f6;--shadow:0 10px 30px rgba(0,0,0,.4);}
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
-    .box{background:var(--card);padding:40px;border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:480px;}
-    h2{text-align:center;margin-bottom:24px;color:var(--primary);font-weight:700;}
-    label{display:block;margin:16px 0 6px;font-weight:600;}
-    input{padding:12px;border:1px solid #cbd5e1;border-radius:8px;width:100%;font-size:16px;background:var(--card);color:var(--text);}
-    .btn{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;margin-top:20px;transition:.3s;}
-    .btn:hover{background:#3654d4;}
-    .btn-logout{background:#64748b;margin-top:12px;}
-    .error{color:var(--danger);text-align:center;margin:12px 0;font-size:14px;}
-    .success{color:var(--success);text-align:center;margin:12px 0;font-size:14px;}
-    .hidden{display:none;}
-    .back{position:absolute;top:20px;left:20px;color:var(--text);font-size:1.4rem;text-decoration:none;}
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – Oncredit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Inter',sans-serif;background:#0a192f;color:#e2e8f0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
+.box{background:#1e293b;padding:40px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.4);width:100%;max-width:500px;}
+h2{text-align:center;margin-bottom:24px;color:#00d4ff;font-weight:700;}
+label{display:block;margin:16px 0 6px;font-weight:600;color:#94a3b8;}
+input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;background:#0a192f;color:#e2e8f0;font-size:16px;}
+.btn{width:100%;padding:14px;background:#00d4ff;color:#0a192f;border:none;border-radius:8px;font-weight:600;cursor:pointer;margin-top:20px;transition:.3s;}
+.btn:hover{background:#00b0d4;}
+.error{color:#ff6b6b;text-align:center;margin:12px 0;}
+.success{color:#51cf66;text-align:center;margin:12px 0;}
+.hidden{display:none;}
+.back{position:absolute;top:20px;left:20px;color:#94a3b8;font-size:1.4rem;text-decoration:none;}
+</style>
 </head>
 <body>
 
-  <a href="index.html" class="back">Back</a>
+<a href="index.html" class="back">Back</a>
 
-  <!-- LOGIN -->
-  <div class="box" id="loginForm">
-    <h2>Admin Login</h2>
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <div id="loginError" class="error"></div>
-    <button class="btn" onclick="login()">Login</button>
-  </div>
+<!-- LOGIN -->
+<div class="box" id="login">
+  <h2>Admin Login</h2>
+  <input type="text" id="user" placeholder="Username">
+  <input type="password" id="pass" placeholder="Password">
+  <div id="err" class="error"></div>
+  <button class="btn" onclick="login()">Login</button>
+</div>
 
-  <!-- ADMIN PANEL -->
-  <div class="box hidden" id="adminPanel">
-    <h2>Department Data</h2>
+<!-- ADMIN FORM -->
+<div class="box hidden" id="panel">
+  <h2>Department Data</h2>
 
-    <label>Department Target (LKR)</label>
-    <input type="number" id="targetInput" placeholder="e.g. 60000000">
+  <label>Department Target (LKR)</label><input type="number" id="target">
+  <label>Money Collected (YTD)</label><input type="number" id="collected">
+  <label>Prolongation Count</label><input type="number" id="prolongation">
+  <label>Restructure Count</label><input type="number" id="restructure">
+  <label>Total Call Count</label><input type="number" id="calls">
+  <label>Active Staff Count</label><input type="number" id="activeStaff">
 
-    <label>Money Collected (YTD)</label>
-    <input type="number" id="collectedInput" placeholder="e.g. 45000000">
+  <h3 style="margin:24px 0 12px;color:#00d4ff;">Best Performers</h3>
+  <label>Overall Best – Name</label><input type="text" id="overallName">
+  <label>Overall Best – Image URL</label><input type="text" id="overallImg" placeholder="https://i.imgur.com/...">
 
-    <label>Prolongation Count</label>
-    <input type="number" id="prolongInput" placeholder="e.g. 1200">
+  <label>Pre Due Best – Name</label><input type="text" id="predueName">
+  <label>Pre Due Best – Image URL</label><input type="text" id="predueImg">
 
-    <label>Restructure Count</label>
-    <input type="number" id="restructInput" placeholder="e.g. 850">
+  <label>Past Due Best – Name</label><input type="text" id="pastdueName">
+  <label>Past Due Best – Image URL</label><input type="text" id="pastdueImg">
 
-    <label>Total Call Count</label>
-    <input type="number" id="callsInput" placeholder="e.g. 15420">
+  <div id="msg" class="success hidden">Saved!</div>
+  <button class="btn" onclick="save()">Save All</button>
+  <button class="btn" style="background:#334155;margin-top:12px;" onclick="logout()">Logout</button>
+</div>
 
-    <label>Active Staff Count</label>
-    <input type="number" id="staffInput" placeholder="e.g. 51">
+<script>
+const ADMIN={username:"admin",password:"oncredit2025"};
 
-    <div id="saveMsg" class="success hidden">Saved!</div>
-    <button class="btn" onclick="saveData()">Save All</button>
-    <button class="btn btn-logout" onclick="logout()">Logout</button>
-  </div>
+function login(){
+  const u=document.getElementById('user').value.trim();
+  const p=document.getElementById('pass').value;
+  if(u===ADMIN.username && p===ADMIN.password){
+    document.getElementById('login').classList.add('hidden');
+    document.getElementById('panel').classList.remove('hidden');
+    load();
+  }else document.getElementById('err').textContent="Invalid credentials";
+}
 
-  <script>
-    // CHANGE THIS PASSWORD!
-    const ADMIN = { username: "admin", password: "oncredit2025" };
+function load(){
+  const d=JSON.parse(localStorage.getItem('oncredit_dept_data')||'{}');
+  const fields=['target','collected','prolongation','restructure','calls','activeStaff','overallName','overallImg','predueName','predueImg','pastdueName','pastdueImg'];
+  fields.forEach(f=>document.getElementById(f).value=d[f]||'');
+}
 
-    function login() {
-      const u = document.getElementById('username').value.trim();
-      const p = document.getElementById('password').value;
-      const err = document.getElementById('loginError');
-      if (u === ADMIN.username && p === ADMIN.password) {
-        document.getElementById('loginForm').classList.add('hidden');
-        document.getElementById('adminPanel').classList.remove('hidden');
-        loadCurrentData();
-      } else {
-        err.textContent = "Invalid credentials";
-      }
-    }
+function save(){
+  const data={
+    target:Number(document.getElementById('target').value),
+    collected:Number(document.getElementById('collected').value),
+    prolongation:Number(document.getElementById('prolongation').value),
+    restructure:Number(document.getElementById('restructure').value),
+    calls:Number(document.getElementById('calls').value),
+    activeStaff:Number(document.getElementById('activeStaff').value),
+    overallName:document.getElementById('overallName').value,
+    overallImg:document.getElementById('overallImg').value,
+    predueName:document.getElementById('predueName').value,
+    predueImg:document.getElementById('predueImg').value,
+    pastdueName:document.getElementById('pastdueName').value,
+    pastdueImg:document.getElementById('pastdueImg').value,
+    timestamp:new Date().toISOString()
+  };
+  localStorage.setItem('oncredit_dept_data',JSON.stringify(data));
+  const msg=document.getElementById('msg'); msg.classList.remove('hidden');
+  setTimeout(()=>{msg.classList.add('hidden');},2000);
+}
 
-    function loadCurrentData() {
-      const d = JSON.parse(localStorage.getItem('oncredit_dept_data') || '{}');
-      document.getElementById('targetInput').value = d.target || '';
-      document.getElementById('collectedInput').value = d.collected || '';
-      document.getElementById('prolongInput').value = d.prolongation || '';
-      document.getElementById('restructInput').value = d.restructure || '';
-      document.getElementById('callsInput').value = d.calls || '';
-      document.getElementById('staffInput').value = d.activeStaff || '';
-    }
+function logout(){
+  document.getElementById('panel').classList.add('hidden');
+  document.getElementById('login').classList.remove('hidden');
+  document.getElementById('user').value=''; document.getElementById('pass').value='';
+}
 
-    function saveData() {
-      const data = {
-        target: Number(document.getElementById('targetInput').value),
-        collected: Number(document.getElementById('collectedInput').value),
-        prolongation: Number(document.getElementById('prolongInput').value),
-        restructure: Number(document.getElementById('restructInput').value),
-        calls: Number(document.getElementById('callsInput').value),
-        activeStaff: Number(document.getElementById('staffInput').value),
-        timestamp: new Date().toISOString()
-      };
-      if (!data.target || data.collected === undefined) {
-        alert("Target and Collected are required");
-        return;
-      }
-      localStorage.setItem('oncredit_dept_data', JSON.stringify(data));
-      const msg = document.getElementById('saveMsg');
-      msg.classList.remove('hidden');
-      setTimeout(() => msg.classList.add('hidden'), 2000);
-    }
-
-    function logout() {
-      document.getElementById('adminPanel').classList.add('hidden');
-      document.getElementById('loginForm').classList.remove('hidden');
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
-    }
-
-    // Optional: stay logged in
-    if (localStorage.getItem('oncredit_admin_logged') === 'true') {
-      document.getElementById('loginForm').classList.add('hidden');
-      document.getElementById('adminPanel').classList.remove('hidden');
-      loadCurrentData();
-    }
-  </script>
+if(localStorage.getItem('oncredit_admin_logged')==='true'){
+  document.getElementById('login').classList.add('hidden');
+  document.getElementById('panel').classList.remove('hidden');
+  load();
+}
+</script>
 </body>
 </html>
