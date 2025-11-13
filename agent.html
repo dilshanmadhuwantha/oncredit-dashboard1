@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oncredit Collection Dashboard – Pro</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<style>
+:root{
+    --bg:#f4f7fb;--text:#2c3e50;--card:#fff;--border:#e1e8ed;
+    --primary:#4361ee;--pos:#2ecc71;--neg:#e74c3c;--warn:#f39c12;--gold:#f1c40f;
+    --shadow:0 8px 25px rgba(67,97,238,.12);
+    --radius:16px;
+}
+[data-theme="dark"]{
+    --bg:#0f172a;--text:#e2e8f0;--card:#1e293b;--border:#334155;
+    --primary:#3b82f6;--pos:#10b981;--neg:#ef4444;--warn:#f59e0b;--gold:#fbbf24;
+    --shadow:0 8px 25px rgba(0,0,0,.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter', 'Segoe UI', sans-serif;background:var(--bg);color:var(--text);padding:24px;transition:all .3s;line-height:1.6;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;}
+.container{max-width:1100px;width:100%;margin:auto;}
+.header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:16px;}
+h1{font-size:2rem;font-weight:800;color:var(--primary);display:flex;align-items:center;gap:10px;}
+h1 i{color:var(--gold);}
+.subtitle{font-size:.95rem;color:#64748b;text-align:center;margin-bottom:24px;font-weight:500;}
+.controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0;}
+#agentSelect, #datePicker{
+    padding:14px 18px;font-size:16px;width:320px;max-width:100%;border:1px solid var(--border);border-radius:12px;
+    background:var(--card);color:var(--text);box-shadow:var(--shadow);font-weight:500;
+}
+.btn{
+    padding:12px 20px;font-size:15px;border-radius:12px;border:none;background:var(--primary);color:#fff;
+    cursor:pointer;transition:.3s;box-shadow:var(--shadow);font-weight:600;display:flex;align-items:center;gap:8px;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(67,97,238,.2);}
+.btn-clear{background:#e2e8f0;color:#64748b;}
+.mode-toggle{background:none;border:none;font-size:1.6rem;cursor:pointer;color:var(--text);transition:.3s;}
+.mode-toggle:hover{transform:scale(1.1);}
+
+/* TARGET BUTTONS IN ONE ROW */
+.target-selection{
+    margin:20px 0;text-align:center;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;align-items:center;
+}
+.target-btn{
+    background:var(--card);color:var(--text);border:2px solid var(--border);font-weight:700;
+    padding:12px 24px;border-radius:30px;transition:.3s;min-width:100px;
+}
+.target-btn.selected{background:var(--pos);border-color:var(--pos);color:#fff;transform:scale(1.05);}
+.target-btn:hover{transform:scale(1.05);}
+
+.tabs{display:flex;justify-content:center;margin:24px 0 16px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
+.tab{
+    padding:12px 20px;cursor:pointer;font-weight:600;color:#94a3b8;border-bottom:3px solid transparent;
+    transition:.3s;border-radius:8px 8px 0 0;display:flex;align-items:center;gap:8px;
+}
+.tab.active{color:var(--primary);border-bottom:3px solid var(--primary);background:rgba(67,97,238,.08);}
+.tab-content{display:none;padding:20px 0;}
+.tab-content.active{display:block;}
+.stats-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;margin:20px 0;
+}
+.stat-card{
+    background:var(--card);padding:20px;border-radius:var(--radius);text-align:center;
+    box-shadow:var(--shadow);transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden;
+}
+.stat-card::before{
+    content:'';position:absolute;top:0;left:0;width:100%;height:4px;
+    background:linear-gradient(90deg,var(--primary),var(--pos));
+}
+.stat-card:hover{transform:translateY(-6px);box-shadow:0 16px 35px rgba(67,97,238,.18);}
+.stat-card h3{
+    font-size:.9rem;color:#94a3b8;margin-bottom:10px;display:flex;align-items:center;
+    justify-content:center;gap:8px;font-weight:600;
+}
+.stat-card p{font-size:1.4rem;font-weight:800;margin:0;display:flex;align-items:center;
+    justify-content:center;gap:6px;
+}
+.positive{color:var(--pos);}
+.negative{color:var(--neg);}
+.warning{color:var(--warn);}
+.progress-wrap{
+    background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);
+    margin-top:20px;
+}
+.progress-row{display:flex;align-items:center;gap:16px;margin-top:10px;}
+.progress-bar{flex:1;height:14px;background:#e2e8f0;border-radius:999px;overflow:hidden;}
+[data-theme="dark"] .progress-bar{background:#334155;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--primary),var(--pos));border-radius:999px;transition:width .8s ease;}
+.progress-percent{min-width:70px;text-align:right;font-weight:700;font-size:1rem;color:var(--primary);}
+.bucket-section{
+    background:var(--card);padding:24px;border-radius:var(--radius);margin-bottom:24px;
+    box-shadow:var(--shadow);
+}
+.bucket-title{
+    font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:16px;
+    text-align:center;padding-bottom:10px;border-bottom:2px solid var(--border);
+    display:flex;align-items:center;justify-content:center;gap:10px;
+}
+table{width:100%;border-collapse:collapse;font-size:.95rem;margin-top:12px;}
+th{
+    background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;padding:14px;text-align:center;
+    font-weight:600;border-radius:8px 8px 0 0;
+}
+td{padding:14px;text-align:center;border-bottom:1px solid var(--border);font-weight:500;}
+tr:hover{background:rgba(67,97,238,.05);}
+.amount{font-weight:700;color:var(--pos);}
+.rank{font-weight:700;color:var(--gold);}
+.footer{
+    text-align:center;margin-top:32px;color:#94a3b8;font-size:.85rem;font-weight:500;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+}
+#loading{display:block;text-align:center;color:var(--primary);font-weight:700;margin:32px;font-size:1.1rem;}
+#error{display:none;color:var(--neg);text-align:center;margin:32px;padding:20px;background:#fee2e2;border-radius:12px;}
+
+/* MOTIVATIONAL QUOTE */
+.quote-overlay{
+    position:relative;margin:30px 0;text-align:center;min-height:120px;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:30px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(67,97,238,.08),rgba(67,97,238,.04));
+    border:1px dashed rgba(67,97,238,.2);overflow:hidden;
+}
+.quote-overlay::before{
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background:radial-gradient(circle at center,rgba(255,255,255,.1),transparent);
+    pointer-events:none;
+}
+.quote-text{
+    font-size:1.3rem;font-weight:700;color:var(--primary);margin-bottom:8px;
+    opacity:0;transform:translateY(20px);transition:all .8s ease;
+}
+.quote-text.active{opacity:1;transform:translateY(0);}
+.quote-author{
+    font-size:.95rem;color:#94a3b8;font-style:italic;opacity:0;transform:translateY(20px);
+    transition:all .8s ease .3s;
+}
+.quote-author.active{opacity:1;transform:translateY(0);}
+
+@media(max-width:768px){
+    .stats-grid{grid-template-columns:1fr 1fr;}
+    #agentSelect,#datePicker{width:100%;}
+    .controls{flex-direction:column;}
+    h1{font-size:1.7rem;}
+    .target-selection{gap:8px;}
+    .target-btn{padding:10px 18px;font-size:14px;min-width:80px;}
+    .quote-text{font-size:1.1rem;}
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Oncredit Dashboard</h1>
+        <button id="themeToggle" class="mode-toggle">Moon</button>
+    </div>
+    <p class="subtitle">November 2025 | Live from Google Sheet</p>
+
+    <div id="loading">Loading data from Google Sheet...</div>
+    <div id="error"></div>
+
+    <div class="controls">
+        <select id="agentSelect" onchange="updateStats()">
+            <option value="">-- Select Agent --</option>
+        </select>
+        <select id="datePicker" onchange="updateStats()">
+            <option value="">-- Select Date --</option>
+        </select>
+        <button class="btn btn-clear" onclick="clearSelection()">Clear</button>
+        <button class="btn" onclick="fetchData()">Refresh Data</button>
+    </div>
+
+    <!-- TARGET BUTTONS IN ONE ROW -->
+    <div class="target-selection" id="targetBox" style="display:none;">
+        <strong>Select Monthly Target:</strong>
+        <button class="btn target-btn" data-val="6000000">6Mn</button>
+        <button class="btn target-btn" data-val="7000000">7Mn</button>
+        <button class="btn target-btn" data-val="8000000">8Mn</button>
+        <button class="btn target-btn" data-val="9000000">9Mn</button>
+        <button class="btn target-btn" data-val="10000000">10Mn</button>
+    </div>
+
+    <!-- MOTIVATIONAL QUOTE -->
+    <div class="quote-overlay" id="quoteBox">
+        <div class="quote-text" id="quoteText"></div>
+        <div class="quote-author" id="quoteAuthor"></div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" onclick="openTab('agent')">Agent Stats</div>
+        <div class="tab" onclick="openTab('without')">Without+Pre+Due</div>
+        <div class="tab" onclick="openTab('soft')">Soft</div>
+        <div class="tab" onclick="openTab('medium')">Medium</div>
+        <div class="tab" onclick="openTab('hard')">Hard</div>
+        <div class="tab" onclick="openTab('restruct')">Restruct</div>
+    </div>
+
+    <!-- AGENT STATS -->
+    <div id="agent" class="tab-content active">
+        <div class="stats-grid">
+            <div class="stat-card"><h3>Monthly Target</h3><p id="target" class="info">-</p></div>
+            <div class="stat-card"><h3>Collected (YTD)</h3><p id="collected" class="positive">-</p></div>
+            <div class="stat-card"><h3>Deficit</h3><p id="deficit" class="negative">-</p></div>
+            <div class="stat-card"><h3>Days Left</h3><p id="daysLeft" class="info">-</p></div>
+            <div class="stat-card"><h3>Required Daily Avg</h3><p id="dailyRequired" class="warning">-</p></div>
+            <div class="stat-card"><h3>Calls Total</h3><p id="callsTotal" class="info">-</p></div>
+            <div class="stat-card"><h3>New Loan Count</h3><p id="newLoans" class="info">-</p></div>
+            <div class="stat-card"><h3>Bonus</h3><p id="bonus" class="positive">-</p></div>
+        </div>
+
+        <div class="progress-wrap">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong>Progress to Target</strong>
+                <small id="progressCaption">0% of target</small>
+            </div>
+            <div class="progress-row">
+                <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+                <div id="progressPercent" class="progress-percent">0%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP 5 BUCKETS -->
+    <div id="without" class="tab-content"><div class="bucket-section"><div class="bucket-title">Top 5 – Without+Pre+Due</div><table id="tblWithout"><thead><tr><th>Rank</th><th>Agent</th><th>Collected</th></tr></thead><tbody></tbody></table></div></div>
+    <div id="soft" class="tab-content"><div class="bucket-section"><div class="bucket-title">Top 5 – Soft</div><table id="tblSoft"><thead><tr><th>Rank</th><th>Agent</th><th>Collected</th></tr></thead><tbody></tbody></table></div></div>
+    <div id="medium" class="tab-content"><div class="bucket-section"><div class="bucket-title">Top 5 – Medium</div><table id="tblMedium"><thead><tr><th>Rank</th><th>Agent</th><th>Collected</th></tr></thead><tbody></tbody></table></div></div>
+    <div id="hard" class="tab-content"><div class="bucket-section"><div class="bucket-title">Top 5 – Hard</div><table id="tblHard"><thead><tr><th>Rank</th><th>Agent</th><th>Collected</th></tr></thead><tbody></tbody></table></div></div>
+    <div id="restruct" class="tab-content"><div class="bucket-section"><div class="bucket-title">Top 5 – Restruct</div><table id="tblRestruct"><thead><tr><th>Rank</th><th>Agent</th><th>Collected</th></tr></thead><tbody></tbody></table></div></div>
+
+    <div class="footer" id="footerNote"></div>
+</div>
+
+<script>
+// YOUR CSV LINK – MUST BE PUBLISHED AS CSV
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQLhHuXwdx3qvaDJ0wbiH_u7MQAMk_sdeb8DDor-Zyhn8rDi4O9oj91L1FtlxdOeqheEiikqKizeBm0/pub?output=csv";
+
+let allRows = [];
+let selectedAgent = '';
+let selectedDate = '';
+let selectedTarget = 6000000;
+
+// Motivational Quotes
+const quotes = [
+    { text: "Success is not the key to happiness. Happiness is the key to success.", author: "Albert Schweitzer" },
+    { text: "If you love what you are doing, you will be successful.", author: "Albert Schweitzer" },
+    { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "Unknown" },
+    { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+    { text: "Your only limit is your mind.", author: "Unknown" }
+];
+let currentQuote = 0;
+
+function showQuote() {
+    const textEl = document.getElementById('quoteText');
+    const authorEl = document.getElementById('quoteAuthor');
+    const quote = quotes[currentQuote];
+
+    textEl.textContent = quote.text;
+    authorEl.textContent = `— ${quote.author}`;
+    textEl.classList.remove('active');
+    authorEl.classList.remove('active');
+
+    setTimeout(() => {
+        textEl.classList.add('active');
+        authorEl.classList.add('active');
+    }, 100);
+
+    currentQuote = (currentQuote + 1) % quotes.length;
+}
+setInterval(showQuote, 10000);
+
+function formatLKR(n) {
+    return "LKR " + Number(n || 0).toLocaleString('en-LK', { maximumFractionDigits: 0 });
+}
+
+function parseNumber(val) {
+    if (!val) return 0;
+    return Number(String(val).replace(/,/g, '').trim()) || 0;
+}
+
+function getDayFromDate(dateStr) {
+    return parseInt(dateStr.split('/')[0], 10);
+}
+
+function getDaysInMonth() { return 30; }
+
+function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+        const values = [];
+        let field = '', inQuote = false;
+        for (let char of lines[i] + ',') {
+            if (char === '"') inQuote = !inQuote;
+            else if (char === ',' && !inQuote) { values.push(field.trim()); field = ''; }
+            else field += char;
+        }
+        if (values.length < headers.length) continue;
+        const obj = {};
+        headers.forEach((h, idx) => {
+            let val = values[idx] || '';
+            val = val.replace(/"/g, '').trim();
+            obj[h] = val;
+        });
+        rows.push(obj);
+    }
+    return rows;
+}
+
+async function fetchData() {
+    const loading = document.getElementById('loading');
+    const error = document.getElementById('error');
+    loading.style.display = 'block';
+    error.style.display = 'none';
+
+    try {
+        const resp = await fetch(CSV_URL + '&_=' + Date.now());
+        if (!resp.ok) throw new Error('Network error');
+        const text = await resp.text();
+        if (text.includes('<title>Error</title>')) throw new Error('CSV not published');
+        allRows = parseCSV(text);
+        populateFilters();
+        loading.style.display = 'none';
+    } catch (e) {
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = `Failed to load data. <a href="https://docs.google.com/spreadsheets/d/2PACX-1vQLhHuXwdx3qvaDJ0wbiH_u7MQAMk_sdeb8DDor-Zyhn8rDi4O9oj91L1FtlxdOeqheEiikqKizeBm0/edit" target="_blank">Publish as CSV</a>`;
+    }
+}
+
+function populateFilters() {
+    const agents = [...new Set(allRows.map(r => r['Operator Name']))].filter(Boolean).sort();
+    const dates = [...new Set(allRows.map(r => r['Date']))].filter(Boolean).sort().reverse();
+
+    const agentSel = document.getElementById('agentSelect');
+    agentSel.innerHTML = '<option value="">-- Select Agent --</option>' +
+        agents.map(a => `<option value="${a}">${a}</option>`).join('');
+
+    const dateSel = document.getElementById('datePicker');
+    dateSel.innerHTML = '<option value="">-- Select Date --</option>' +
+        dates.map(d => `<option value="${d}">${d}</option>`).join('');
+
+    if (dates.length > 0) {
+        dateSel.value = dates[0];
+        selectedDate = dates[0];
+    }
+    updateStats();
+    showQuote();
+}
+
+function updateStats() {
+    selectedAgent = document.getElementById('agentSelect').value;
+    selectedDate = document.getElementById('datePicker').value;
+    document.getElementById('targetBox').style.display = selectedAgent ? 'flex' : 'none';
+
+    if (!selectedAgent || !selectedDate) {
+        clearStats();
+        return;
+    }
+
+    const saved = localStorage.getItem(`target_${selectedAgent}`);
+    selectedTarget = saved ? Number(saved) : 6000000;
+    document.querySelectorAll('.target-btn').forEach(b => {
+        b.classList.toggle('selected', Number(b.dataset.val) === selectedTarget);
+    });
+
+    calculateStats();
+    updateBuckets();
+}
+
+function clearStats() {
+    ['target','collected','deficit','dailyRequired','callsTotal','newLoans','bonus','daysLeft'].forEach(id => {
+        document.getElementById(id).textContent = '-';
+    });
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressPercent').textContent = '0%';
+    document.getElementById('progressCaption').textContent = '0% of target';
+}
+
+function calculateStats() {
+    const row = allRows.find(r => r['Date'] === selectedDate && r['Operator Name'] === selectedAgent);
+    if (!row) { alert('No data for this agent/date'); return; }
+
+    const ytd = parseNumber(row['Paid amount']);
+    const bonus = parseNumber(row['Total Bonusses']);
+    const calls = parseNumber(row['Call count']);
+    const newLoans = parseNumber(row['New loan count']);
+    const deficit = selectedTarget - ytd;
+    const currentDay = getDayFromDate(selectedDate);
+    const daysLeft = Math.max(getDaysInMonth() - currentDay, 0);
+    const dailyReq = deficit > 0 && daysLeft > 0 ? Math.ceil(deficit / daysLeft) : 0;
+
+    document.getElementById('target').innerHTML = `<i class="fas fa-bullseye"></i> ${formatLKR(selectedTarget)}`;
+    document.getElementById('collected').innerHTML = `<i class="fas fa-coins"></i> ${formatLKR(ytd)}`;
+    const defEl = document.getElementById('deficit');
+    defEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${formatLKR(Math.abs(deficit))}`;
+    defEl.className = deficit > 0 ? 'negative' : 'positive';
+    document.getElementById('daysLeft').innerHTML = `<i class="fas fa-calendar-alt"></i> ${daysLeft}`;
+    document.getElementById('dailyRequired').innerHTML = `<i class="fas fa-clock"></i> ${formatLKR(dailyReq)}/day`;
+    document.getElementById('callsTotal').innerHTML = `<i class="fas fa-phone"></i> ${calls}`;
+    document.getElementById('newLoans').innerHTML = `<i class="fas fa-file-invoice"></i> ${newLoans}`;
+    document.getElementById('bonus').innerHTML = `<i class="fas fa-gift"></i> ${formatLKR(bonus)}`;
+
+    const pct = selectedTarget > 0 ? (ytd / selectedTarget) * 100 : 0;
+    const pctR = Math.min(Math.round(pct), 300);
+    document.getElementById('progressFill').style.width = Math.min(pctR, 100) + '%';
+    document.getElementById('progressPercent').textContent = pctR + '%';
+    document.getElementById('progressCaption').textContent = pctR + '% of target';
+}
+
+function updateBuckets() {
+    const today = allRows.filter(r => r.Date === selectedDate);
+    const buckets = { 
+        without: 'Without+Pre+Due Collection', 
+        soft: 'Soft Collection', 
+        medium: 'Medium Collection', 
+        hard: 'Hard Collection', 
+        restruct: 'Restruct Collection' 
+    };
+
+    Object.entries(buckets).forEach(([key, col]) => {
+        const sorted = today.map(r => ({ name: r['Operator Name'], amt: parseNumber(r[col]) }))
+            .sort((a, b) => b.amt - a.amt).slice(0, 5);
+        const tbody = document.querySelector(`#tbl${key.charAt(0).toUpperCase() + key.slice(1)} tbody`);
+        tbody.innerHTML = sorted.length ? sorted.map((x, i) => `
+            <tr><td class="rank">${i+1}</td><td>${x.name}</td><td class="amount">${formatLKR(x.amt)}</td></tr>
+        `).join('') : '<tr><td colspan="3">No data</td></tr>';
+    });
+}
+
+document.querySelectorAll('.target-btn').forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll('.target-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedTarget = Number(btn.dataset.val);
+        localStorage.setItem(`target_${selectedAgent}`, selectedTarget);
+        calculateStats();
+    };
+});
+
+function openTab(id) {
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[onclick="openTab('${id}')"]`).classList.add('active');
+    if (id === 'agent') updateStats();
+}
+
+function clearSelection() {
+    document.getElementById('agentSelect').value = '';
+    document.getElementById('datePicker').value = '';
+    document.getElementById('targetBox').style.display = 'none';
+    clearStats();
+}
+
+document.getElementById('themeToggle').onclick = () => {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+};
+
+setInterval(fetchData, 5 * 60 * 1000);
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetchData();
+    document.getElementById('footerNote').innerHTML = `Live from Google Sheet | Auto-refresh every 5 min | <strong>51 Agents</strong>`;
+    const theme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', theme);
+});
+</script>
+</body>
+</html>
+
+
+
