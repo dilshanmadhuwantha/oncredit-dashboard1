@@ -3,95 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Oncredit</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Admin Panel – Oncredit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
   <style>
-    :root{--bg:#f1f5f9;--text:#1e293b;--card:#fff;--primary:#4361ee;--success:#10b981;--danger:#ef4444;--shadow:0 10px 30px rgba(0,0,0,.1);--radius:16px;}
+    :root{--bg:#f8fafc;--text:#1e293b;--card:#fff;--primary:#4361ee;--success:#10b981;--danger:#ef4444;--shadow:0 10px 30px rgba(0,0,0,.1);--radius:12px;}
     [data-theme="dark"]{--bg:#0f172a;--text:#e2e8f0;--card:#1e293b;--primary:#3b82f6;--shadow:0 10px 30px rgba(0,0,0,.4);}
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
-    .login-box{background:var(--card);padding:40px;border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:480px;}
+    .box{background:var(--card);padding:40px;border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:480px;}
     h2{text-align:center;margin-bottom:24px;color:var(--primary);font-weight:700;}
-    label{display:block;margin:16px 0 8px;font-weight:600;color:var(--text);}
-    input{padding:14px;border:1px solid #cbd5e1;border-radius:12px;width:100%;font-size:16px;background:var(--card);color:var(--text);}
-    .btn{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-weight:600;cursor:pointer;margin-top:20px;}
+    label{display:block;margin:16px 0 6px;font-weight:600;}
+    input{padding:12px;border:1px solid #cbd5e1;border-radius:8px;width:100%;font-size:16px;background:var(--card);color:var(--text);}
+    .btn{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;margin-top:20px;transition:.3s;}
     .btn:hover{background:#3654d4;}
     .btn-logout{background:#64748b;margin-top:12px;}
     .error{color:var(--danger);text-align:center;margin:12px 0;font-size:14px;}
-    .success{color:var(--success);text-align:center;margin:12px 0;}
+    .success{color:var(--success);text-align:center;margin:12px 0;font-size:14px;}
     .hidden{display:none;}
-    .back-btn{position:absolute;top:20px;left:20px;color:var(--text);font-size:1.4rem;text-decoration:none;}
-    .form-group{margin-bottom:20px;}
+    .back{position:absolute;top:20px;left:20px;color:var(--text);font-size:1.4rem;text-decoration:none;}
   </style>
 </head>
 <body>
 
-  <a href="department.html" class="back-btn">Back</a>
+  <a href="index.html" class="back">Back</a>
 
   <!-- LOGIN -->
-  <div class="login-box" id="loginForm">
+  <div class="box" id="loginForm">
     <h2>Admin Login</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
     <div id="loginError" class="error"></div>
     <button class="btn" onclick="login()">Login</button>
   </div>
 
   <!-- ADMIN PANEL -->
-  <div class="login-box hidden" id="adminPanel">
-    <h2>Enter Department Data</h2>
-    <div class="form-group">
-      <label>Department Target (LKR)</label>
-      <input type="number" id="targetInput" placeholder="e.g. 60000000" />
-    </div>
-    <div class="form-group">
-      <label>Money Collected (YTD)</label>
-      <input type="number" id="collectedInput" placeholder="e.g. 45000000" />
-    </div>
-    <div class="form-group">
-      <label>Prolongation Count</label>
-      <input type="number" id="prolongInput" placeholder="e.g. 1200" />
-    </div>
-    <div class="form-group">
-      <label>Restructure Count</label>
-      <input type="number" id="restructInput" placeholder="e.g. 850" />
-    </div>
-    <div class="form-group">
-      <label>Total Call Count</label>
-      <input type="number" id="callsInput" placeholder="e.g. 15420" />
-    </div>
+  <div class="box hidden" id="adminPanel">
+    <h2>Department Data</h2>
 
-    <div id="saveMsg" class="success hidden">Saved successfully!</div>
-    <button class="btn" onclick="saveData()">Save All Data</button>
+    <label>Department Target (LKR)</label>
+    <input type="number" id="targetInput" placeholder="e.g. 60000000">
+
+    <label>Money Collected (YTD)</label>
+    <input type="number" id="collectedInput" placeholder="e.g. 45000000">
+
+    <label>Prolongation Count</label>
+    <input type="number" id="prolongInput" placeholder="e.g. 1200">
+
+    <label>Restructure Count</label>
+    <input type="number" id="restructInput" placeholder="e.g. 850">
+
+    <label>Total Call Count</label>
+    <input type="number" id="callsInput" placeholder="e.g. 15420">
+
+    <label>Active Staff Count</label>
+    <input type="number" id="staffInput" placeholder="e.g. 51">
+
+    <div id="saveMsg" class="success hidden">Saved!</div>
+    <button class="btn" onclick="saveData()">Save All</button>
     <button class="btn btn-logout" onclick="logout()">Logout</button>
   </div>
 
   <script>
     // CHANGE THIS PASSWORD!
-    const ADMIN_CREDENTIALS = { username: "admin", password: "oncredit2025" };
+    const ADMIN = { username: "admin", password: "oncredit2025" };
 
     function login() {
-      const user = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value;
-      const error = document.getElementById('loginError');
-
-      if (user === ADMIN_CREDENTIALS.username && pass === ADMIN_CREDENTIALS.password) {
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+      const err = document.getElementById('loginError');
+      if (u === ADMIN.username && p === ADMIN.password) {
         document.getElementById('loginForm').classList.add('hidden');
         document.getElementById('adminPanel').classList.remove('hidden');
         loadCurrentData();
       } else {
-        error.textContent = "Invalid username or password";
+        err.textContent = "Invalid credentials";
       }
     }
 
     function loadCurrentData() {
-      const data = JSON.parse(localStorage.getItem('oncredit_dept_data') || '{}');
-      document.getElementById('targetInput').value = data.target || '';
-      document.getElementById('collectedInput').value = data.collected || '';
-      document.getElementById('prolongInput').value = data.prolongation || '';
-      document.getElementById('restructInput').value = data.restructure || '';
-      document.getElementById('callsInput').value = data.calls || '';
+      const d = JSON.parse(localStorage.getItem('oncredit_dept_data') || '{}');
+      document.getElementById('targetInput').value = d.target || '';
+      document.getElementById('collectedInput').value = d.collected || '';
+      document.getElementById('prolongInput').value = d.prolongation || '';
+      document.getElementById('restructInput').value = d.restructure || '';
+      document.getElementById('callsInput').value = d.calls || '';
+      document.getElementById('staffInput').value = d.activeStaff || '';
     }
 
     function saveData() {
@@ -101,14 +98,13 @@
         prolongation: Number(document.getElementById('prolongInput').value),
         restructure: Number(document.getElementById('restructInput').value),
         calls: Number(document.getElementById('callsInput').value),
+        activeStaff: Number(document.getElementById('staffInput').value),
         timestamp: new Date().toISOString()
       };
-
-      if (!data.target || !data.collected) {
-        alert("Target and Collected are required!");
+      if (!data.target || data.collected === undefined) {
+        alert("Target and Collected are required");
         return;
       }
-
       localStorage.setItem('oncredit_dept_data', JSON.stringify(data));
       const msg = document.getElementById('saveMsg');
       msg.classList.remove('hidden');
@@ -122,7 +118,7 @@
       document.getElementById('password').value = '';
     }
 
-    // Optional: Auto-login if previously logged
+    // Optional: stay logged in
     if (localStorage.getItem('oncredit_admin_logged') === 'true') {
       document.getElementById('loginForm').classList.add('hidden');
       document.getElementById('adminPanel').classList.remove('hidden');
