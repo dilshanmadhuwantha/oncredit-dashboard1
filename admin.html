@@ -22,7 +22,6 @@ input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;backgro
 
 <a href="index.html" class="back">Back</a>
 
-<!-- LOGIN -->
 <div class="box" id="login">
   <h2>Admin Login</h2>
   <input type="text" id="user" placeholder="Username">
@@ -31,7 +30,6 @@ input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;backgro
   <button class="btn" onclick="login()">Login</button>
 </div>
 
-<!-- ADMIN FORM -->
 <div class="box hidden" id="panel">
   <h2>Department Data</h2>
 
@@ -43,14 +41,18 @@ input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;backgro
   <label>Active Staff Count</label><input type="number" id="activeStaff">
 
   <h3 style="margin:24px 0 12px;color:#00d4ff;">Best Performers</h3>
+
   <label>Overall Best – Name</label><input type="text" id="overallName">
   <label>Overall Best – Image URL</label><input type="text" id="overallImg" placeholder="https://i.imgur.com/...">
+  <label>Overall Best – Collection (LKR)</label><input type="number" id="overallAmount">
 
   <label>Pre Due Best – Name</label><input type="text" id="predueName">
   <label>Pre Due Best – Image URL</label><input type="text" id="predueImg">
+  <label>Pre Due Best – Collection (LKR)</label><input type="number" id="predueAmount">
 
   <label>Past Due Best – Name</label><input type="text" id="pastdueName">
   <label>Past Due Best – Image URL</label><input type="text" id="pastdueImg">
+  <label>Past Due Best – Collection (LKR)</label><input type="number" id="pastdueAmount">
 
   <div id="msg" class="success hidden">Saved!</div>
   <button class="btn" onclick="save()">Save All</button>
@@ -72,7 +74,10 @@ function login(){
 
 function load(){
   const d=JSON.parse(localStorage.getItem('oncredit_dept_data')||'{}');
-  const fields=['target','collected','prolongation','restructure','calls','activeStaff','overallName','overallImg','predueName','predueImg','pastdueName','pastdueImg'];
+  const fields=['target','collected','prolongation','restructure','calls','activeStaff',
+                'overallName','overallImg','overallAmount',
+                'predueName','predueImg','predueAmount',
+                'pastdueName','pastdueImg','pastdueAmount'];
   fields.forEach(f=>document.getElementById(f).value=d[f]||'');
 }
 
@@ -86,10 +91,13 @@ function save(){
     activeStaff:Number(document.getElementById('activeStaff').value),
     overallName:document.getElementById('overallName').value,
     overallImg:document.getElementById('overallImg').value,
+    overallAmount:Number(document.getElementById('overallAmount').value),
     predueName:document.getElementById('predueName').value,
     predueImg:document.getElementById('predueImg').value,
+    predueAmount:Number(document.getElementById('predueAmount').value),
     pastdueName:document.getElementById('pastdueName').value,
     pastdueImg:document.getElementById('pastdueImg').value,
+    pastdueAmount:Number(document.getElementById('pastdueAmount').value),
     timestamp:new Date().toISOString()
   };
   localStorage.setItem('oncredit_dept_data',JSON.stringify(data));
@@ -101,12 +109,6 @@ function logout(){
   document.getElementById('panel').classList.add('hidden');
   document.getElementById('login').classList.remove('hidden');
   document.getElementById('user').value=''; document.getElementById('pass').value='';
-}
-
-if(localStorage.getItem('oncredit_admin_logged')==='true'){
-  document.getElementById('login').classList.add('hidden');
-  document.getElementById('panel').classList.remove('hidden');
-  load();
 }
 </script>
 </body>
