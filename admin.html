@@ -17,16 +17,19 @@ input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;backgro
 .btn:hover{background:#00b0d4;}
 .success{color:#51cf66;text-align:center;margin:12px 0;}
 .hidden{display:none;}
+.back{position:absolute;top:20px;left:20px;color:#94a3b8;font-size:1.4rem;text-decoration:none;}
 </style>
 </head>
 <body>
 
-<div class="box">
+<a href="index.html" class="back">Back</a>
+
+<div class="box" id="login">
   <h2>Admin Login</h2>
   <input type="text" id="username" placeholder="Username">
   <input type="password" id="password" placeholder="Password">
   <button class="btn" onclick="login()">Login</button>
-  <div id="error" class="success hidden" style="color:#ff6b6b;"></div>
+  <div id="error" style="color:#ff6b6b;text-align:center;margin-top:10px;"></div>
 </div>
 
 <div class="box hidden" id="form">
@@ -75,12 +78,11 @@ function login(){
   const u = document.getElementById('username').value.trim();
   const p = document.getElementById('password').value;
   if(u === ADMIN.username && p === ADMIN.password){
-    document.querySelector('.box').classList.add('hidden');
+    document.getElementById('login').classList.add('hidden');
     document.getElementById('form').classList.remove('hidden');
     load();
   } else {
     document.getElementById('error').textContent = "Wrong username or password";
-    document.getElementById('error').classList.remove('hidden');
   }
 }
 
