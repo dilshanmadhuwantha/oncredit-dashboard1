@@ -16,8 +16,8 @@ label{display:block;margin:16px 0 6px;font-weight:600;color:#94a3b8;}
 input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;background:#0a192f;color:#e2e8f0;font-size:16px;}
 .btn{width:100%;padding:14px;background:#00d4ff;color:#0a192f;border:none;border-radius:8px;font-weight:600;cursor:pointer;margin-top:20px;transition:.3s;}
 .btn:hover{background:#00b0d4;}
-.success{color:#51cf66;text-align:center;margin:12px 0;font-weight:bold;}
-.error{color:#ff6b6b;text-align:center;margin:12px 0;}
+.success{color:#51cf66;text-align:center;margin:12px 0;font-weight:bold;font-size:1.1rem;}
+.error{color:#ff6b6b;text-align:center;margin:12px 0;font-weight:bold;}
 .hidden{display:none;}
 .back{position:absolute;top:20px;left:20px;color:#94a3b8;font-size:1.4rem;text-decoration:none;}
 </style>
@@ -30,7 +30,7 @@ input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;backgro
   <h2>Admin Login</h2>
   <input type="text" id="username" placeholder="Username">
   <input type="password" id="password" placeholder="Password">
-  <div id="error" class="error"></div>
+  <div id="loginError" class="error"></div>
   <button class="btn" onclick="login()">Login</button>
 </div>
 
@@ -57,7 +57,7 @@ input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;backgro
   <label>Past Due Best – Image URL</label><input type="text" id="pastdueImg">
   <label>Past Due Best – Collection (LKR)</label><input type="number" id="pastdueAmount">
 
-  <div id="msg" class="success hidden">Saved to Cloud! Refresh dashboard to see changes.</div>
+  <div id="msg" class="success hidden">SAVED TO CLOUD SUCCESSFULLY!</div>
   <button class="btn" onclick="save()">Save to Cloud</button>
 </div>
 
@@ -84,7 +84,7 @@ function login(){
     document.getElementById('panel').classList.remove('hidden');
     load();
   } else {
-    document.getElementById('error').textContent = "Wrong username or password";
+    document.getElementById('loginError').textContent = "Wrong username or password";
   }
 }
 
@@ -101,27 +101,34 @@ function load(){
 
 function save(){
   const data = {
-    target: Number(document.getElementById('target').value),
-    collected: Number(document.getElementById('collected').value),
-    prolongation: Number(document.getElementById('prolongation').value),
-    restructure: Number(document.getElementById('restructure').value),
-    calls: Number(document.getElementById('calls').value),
-    activeStaff: Number(document.getElementById('activeStaff').value),
+    target: Number(document.getElementById('target').value) || 0,
+    collected: Number(document.getElementById('collected').value) || 0,
+    prolongation: Number(document.getElementById('prolongation').value) || 0,
+    restructure: Number(document.getElementById('restructure').value) || 0,
+    calls: Number(document.getElementById('calls').value) || 0,
+    activeStaff: Number(document.getElementById('activeStaff').value) || 0,
     overallName: document.getElementById('overallName').value,
     overallImg: document.getElementById('overallImg').value,
-    overallAmount: Number(document.getElementById('overallAmount').value),
+    overallAmount: Number(document.getElementById('overallAmount').value) || 0,
     predueName: document.getElementById('predueName').value,
     predueImg: document.getElementById('predueImg').value,
-    predueAmount: Number(document.getElementById('predueAmount').value),
+    predueAmount: Number(document.getElementById('predueAmount').value) || 0,
     pastdueName: document.getElementById('pastdueName').value,
     pastdueImg: document.getElementById('pastdueImg').value,
-    pastdueAmount: Number(document.getElementById('pastdueAmount').value),
+    pastdueAmount: Number(document.getElementById('pastdueAmount').value) || 0,
     timestamp: new Date().toISOString()
   };
-  ref.set(data).then(() => {
-    document.getElementById('msg').classList.remove('hidden');
-    setTimeout(() => document.getElementById('msg').classList.add('hidden'), 3000);
-  }).catch(err => alert("Save failed: " + err.message));
+  ref.set(data)
+    .then(() => {
+      document.getElementById('msg').textContent = "SAVED TO CLOUD SUCCESSFULLY!";
+      document.getElementById('msg').classList.remove('hidden');
+      setTimeout(() => document.getElementById('msg').classList.add('hidden'), 4000);
+    })
+    .catch(err => {
+      document.getElementById('msg').textContent = "SAVE FAILED: " + err.message;
+      document.getElementById('msg').style.color = "#ff6b6b";
+      document.getElementById('msg').classList.remove('hidden');
+    });
 }
 </script>
 </body>
