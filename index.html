@@ -6,11 +6,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
-/* SAME STYLES AS BEFORE */
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Inter',sans-serif;background:#0a192f;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;padding:20px;min-height:100vh;position:relative;}
 .container{max-width:1200px;width:100%;}
+
+/* (Keep all your beautiful styles from the last working version - omitted for brevity) */
 header{text-align:center;margin-bottom:32px;}
 h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
 .subtitle{font-size:1rem;color:#94a3b8;margin-top:8px;}
@@ -42,8 +45,8 @@ h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
 .footer{text-align:center;color:#94a3b8;font-size:.9rem;margin-top:20px;}
 .music-toggle{position:fixed;bottom:20px;right:20px;background:#1e293b;padding:14px;border-radius:50%;box-shadow:0 4px 15px rgba(0,0,0,.5);cursor:pointer;color:#00d4ff;font-size:1.4rem;transition:.3s;z-index:1000;}
 .music-toggle:hover{transform:scale(1.1);background:#334155;}
-#loading{position:fixed;inset:00;background:#0a192f;display:flex;align-items:center;justify-content:center;color:#00d4ff;font-size:1.5rem;z-index:9999;}
-#loading i{font-size:4rem;animation:spin 1s linear infinite;margin-right:20px;}
+#loading{position:fixed;inset:0;background:#0a192f;display:flex;align-items:center;justify-content:center;color:#00d4ff;font-size:1.5rem;z-index:9999;gap:20px;}
+#loading i{font-size:4rem;animation:spin 1s linear infinite;}
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 </style>
 </head>
@@ -51,7 +54,7 @@ h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
 
 <div id="loading">
   <i class="fas fa-circle-notch"></i>
-  <div>Loading data...</div>
+  <div>Loading live data...</div>
 </div>
 
 <div class="container">
@@ -62,7 +65,7 @@ h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
 
   <div id="noData" class="no-data" style="display:none;">No data yet</div>
 
-  <!-- ROW 1 -->
+  <!-- (your full HTML cards, progress, performers - same as last version) -->
   <div class="stats" id="row1" style="display:none;">
     <div class="card target"><h3>Department Target</h3><div class="value" id="deptTarget">-</div></div>
     <div class="card"><h3>Money Collected (YTD)</h3><div class="value" id="totalCollected">-</div></div>
@@ -70,20 +73,17 @@ h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
     <div class="card"><h3>Restructure Count</h3><div class="value" id="restructure">-</div><div class="target">Target: 100</div></div>
   </div>
 
-  <!-- ROW 2 -->
   <div class="stats" id="row2" style="display:none;">
     <div class="card"><h3>Total Call Count</h3><div class="value" id="totalCalls">-</div><div class="target">Target: 280,000</div></div>
     <div class="card"><h3>Active Staff</h3><div class="value" id="activeStaff">-</div><div class="target">Carder: 57</div></div>
   </div>
 
-  <!-- PROGRESS -->
   <div class="progress" id="progressSection" style="display:none;">
     <div class="progress-label">Collection Target Progress</div>
     <div class="bar-bg"><div id="progressFill" class="bar-fill"></div></div>
     <p id="progressText">0% achieved</p>
   </div>
 
-  <!-- BEST PERFORMERS -->
   <div class="performer-grid" id="performers" style="display:none;">
     <div class="performer">
       <div class="label">Overall bestperformer</div>
@@ -121,53 +121,63 @@ h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
 </audio>
 
 <script>
-function fmt(n){return (Number(n)||0).toLocaleString('en-LK');}
-function fmtLKR(n){return "LKR "+fmt(n);}
+// YOUR FIREBASE CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyBI1wea7fQkOAfSom4WOo1Ch6lsjt_MuIA",
+  authDomain: "oncredit-dashboard.firebaseapp.com",
+  projectId: "oncredit-dashboard",
+  storageBucket: "oncredit-dashboard.firebasestorage.app",
+  messagingSenderId: "442565003852",
+  appId: "1:442565003852:web:820bf17253e6921c4602e9"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const dataRef = db.ref('oncredit_dept_data');
 
 const loading = document.getElementById('loading');
 
-fetch('https://raw.githubusercontent.com/dilshanmadhuwantha/oncredit-dashboard1/main/data.json?' + Date.now())
-  .then(r => r.json())
-  .then(d => {
-    loading.style.display = 'none';
-    const has = d.target && d.collected !== undefined;
-    document.getElementById('noData').style.display = has?'none':'block';
-    ['row1','row2','progressSection','performers'].forEach(id=>document.getElementById(id).style.display=has?'grid':'none');
-    if(!has) return;
+dataRef.on('value', (snapshot) => {
+  loading.style.display = 'none';
+  const d = snapshot.val() || {};
+  const has = d.target && d.collected !== undefined;
 
-    document.getElementById('deptTarget').textContent = fmtLKR(d.target);
-    document.getElementById('totalCollected').textContent = fmtLKR(d.collected);
-    document.getElementById('prolongation').textContent = fmt(d.prolongation);
-    document.getElementById('restructure').textContent = fmt(d.restructure);
-    document.getElementById('totalCalls').textContent = fmt(d.calls);
-    document.getElementById('activeStaff').textContent = fmt(d.activeStaff);
+  document.getElementById('noData').style.display = has ? 'none' : 'block';
+  ['row1','row2','progressSection','performers'].forEach(id => document.getElementById(id).style.display = has ? 'grid' : 'none');
+  if (!has) return;
 
-    const prog = d.target>0?Math.min((d.collected/d.target)*100,100).toFixed(1):0;
-    const fill = document.getElementById('progressFill');
-    fill.style.width = prog+'%';
-    fill.className = 'bar-fill';
-    if(prog < 30) fill.classList.add('red');
-    else if(prog <= 70) fill.classList.add('orange');
-    else fill.classList.add('green');
-    document.getElementById('progressText').textContent = prog+'% achieved';
+  document.getElementById('deptTarget').textContent = "LKR " + (d.target||0).toLocaleString('en-LK');
+  document.getElementById('totalCollected').textContent = "LKR " + (d.collected||0).toLocaleString('en-LK');
+  document.getElementById('prolongation').textContent = (d.prolongation||0).toLocaleString('en-LK');
+  document.getElementById('restructure').textContent = (d.restructure||0).toLocaleString('en-LK');
+  document.getElementById('totalCalls').textContent = (d.calls||0).toLocaleString('en-LK');
+  document.getElementById('activeStaff').textContent = (d.activeStaff||0);
 
-    document.getElementById('overallImg').src = d.overallImg||'https://via.placeholder.com/80?text=No+Image';
-    document.getElementById('overallName').textContent = d.overallName||'Overall Best';
-    document.getElementById('overallAmount').textContent = fmtLKR(d.overallAmount||0);
+  const prog = d.target > 0 ? Math.min((d.collected / d.target) * 100, 100).toFixed(1) : 0;
+  const fill = document.getElementById('progressFill');
+  fill.style.width = prog + '%';
+  fill.className = 'bar-fill';
+  if (prog < 30) fill.classList.add('red');
+  else if (prog <= 70) fill.classList.add('orange');
+  else fill.classList.add('green');
+  document.getElementById('progressText').textContent = prog + '% achieved';
 
-    document.getElementById('predueImg').src = d.predueImg||'https://via.placeholder.com/80?text=No+Image';
-    document.getElementById('predueName').textContent = d.predueName||'Pre Due Best';
-    document.getElementById('predueAmount').textContent = fmtLKR(d.predueAmount||0);
+  document.getElementById('overallImg').src = d.overallImg || 'https://via.placeholder.com/80?text=No+Image';
+  document.getElementById('overallName').textContent = d.overallName || 'Overall Best';
+  document.getElementById('overallAmount').textContent = "LKR " + (d.overallAmount||0).toLocaleString('en-LK');
 
-    document.getElementById('pastdueImg').src = d.pastdueImg||'https://via.placeholder.com/80?text=No+Image';
-    document.getElementById('pastdueName').textContent = d.pastdueName||'Past Due Best';
-    document.getElementById('pastdueAmount').textContent = fmtLKR(d.pastdueAmount||0);
+  document.getElementById('predueImg').src = d.predueImg || 'https://via.placeholder.com/80?text=No+Image';
+  document.getElementById('predueName').textContent = d.predueName || 'Pre Due Best';
+  document.getElementById('predueAmount').textContent = "LKR " + (d.predueAmount||0).toLocaleString('en-LK');
 
-    document.getElementById('lastUpdated').textContent = new Date(d.timestamp).toLocaleString();
-  })
-  .catch(() => {
-    loading.innerHTML = '<div style="color:#ff6b6b;">No internet or data not found<br>Check connection and try again</div>';
-  });
+  document.getElementById('pastdueImg').src = d.pastdueImg || 'https://via.placeholder.com/80?text=No+Image';
+  document.getElementById('pastdueName').textContent = d.pastdueName || 'Past Due Best';
+  document.getElementById('pastdueAmount').textContent = "LKR " + (d.pastdueAmount||0).toLocaleString('en-LK');
+
+  document.getElementById('lastUpdated').textContent = new Date(d.timestamp).toLocaleString();
+}, (error) => {
+  loading.innerHTML = '<div style="color:#ff6b6b;">Connection error<br>Check internet and refresh</div>';
+});
 
 /* MUSIC */
 const audio = document.getElementById('bgMusic');
@@ -175,11 +185,11 @@ const toggle = document.getElementById('musicToggle');
 const icon = document.getElementById('musicIcon');
 let playing = false;
 toggle.onclick = () => {
-  if(playing){audio.pause();icon.className='fas fa-play';} 
-  else{audio.play();icon.className='fas fa-pause';}
-  playing=!playing;
+  if (playing) { audio.pause(); icon.className = 'fas fa-play'; }
+  else { audio.play(); icon.className = 'fas fa-pause'; }
+  playing = !playing;
 };
-document.body.addEventListener('click',()=>{if(!playing){audio.play();playing=true;icon.className='fas fa-pause';}}, {once:true});
+document.body.addEventListener('click', () => { if (!playing) { audio.play(); playing = true; icon.className = 'fas fa-pause'; } }, { once: true });
 </script>
 </body>
 </html>
