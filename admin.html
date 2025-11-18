@@ -2,104 +2,56 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin – Oncredit</title>
+<title>Admin – Update Data</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Inter',sans-serif;background:#0a192f;color:#e2e8f0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
-.box{background:#1e293b;padding:40px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.4);width:100%;max-width:500px;}
-h2{text-align:center;margin-bottom:24px;color:#00d4ff;font-weight:700;}
-label{display:block;margin:16px 0 6px;font-weight:600;color:#94a3b8;}
-input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;background:#0a192f;color:#e2e8f0;font-size:16px;}
-.btn{width:100%;padding:14px;background:#00d4ff;color:#0a192f;border:none;border-radius:8px;font-weight:600;cursor:pointer;margin-top:20px;transition:.3s;}
-.btn:hover{background:#00b0d4;}
-.success{color:#51cf66;text-align:center;margin:12px 0;font-weight:bold;font-size:1.1rem;}
-.error{color:#ff6b6b;text-align:center;margin:12px 0;font-weight:bold;}
-.hidden{display:none;}
-.back{position:absolute;top:20px;left:20px;color:#94a3b8;font-size:1.4rem;text-decoration:none;}
+.box{background:#1e293b;padding:40px;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.5);width:100%;max-width:520px;}
+h2{text-align:center;color:#00d4ff;margin-bottom:30px;font-size:1.8rem;}
+label{display:block;margin:16px 0 8px;color:#94a3b8;font-weight:600;}
+input, textarea{padding:14px;border-radius:10px;border:1px solid #334155;background:#0a192f;color:#fff;width:100%;font-size:1rem;}
+.btn{width:100%;padding:16px;background:#00d4ff;color:#0a192f;border:none;border-radius:12px;font-weight:700;font-size:1.1rem;cursor:pointer;margin-top:30px;}
+.btn:hover{background:#00b8d4;}
+.msg{margin-top:20px;text-align:center;font-weight:bold;font-size:1.2rem;padding:12px;border-radius:10px;}
+.success{background:#225c34;color:#51cf66;}
+.error{background:#5c2222;color:#ff6b6b;}
 </style>
 </head>
 <body>
 
-<a href="index.html" class="back">Back</a>
+<div class="box">
+  <h2>Admin – Update Dashboard</h2>
+  <p style="text-align:center;color:#94a3b8;margin-bottom:20px;">After filling → click button → copy all text → replace in data.json on GitHub</p>
 
-<div class="box" id="login">
-  <h2>Admin Login</h2>
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
-  <div id="loginError" class="error"></div>
-  <button class="btn" onclick="login()">Login</button>
-</div>
+  <label>Department Target (LKR)</label><input type="number" id="target" value="496000000">
+  <label>Money Collected (YTD)</label><input type="number" id="collected" value="163993000">
+  <label>Prolongation Count</label><input type="number" id="prolongation" value="412">
+  <label>Restructure Count</label><input type="number" id="restructure" value="43">
+  <label>Total Call Count</label><input type="number" id="calls" value="125000">
+  <label>Active Staff Count</label><input type="number" id="activeStaff" value="55">
 
-<div class="box hidden" id="panel">
-  <h2>Update Department Data</h2>
-
-  <label>Department Target (LKR)</label><input type="number" id="target">
-  <label>Money Collected (YTD)</label><input type="number" id="collected">
-  <label>Prolongation Count</label><input type="number" id="prolongation">
-  <label>Restructure Count</label><input type="number" id="restructure">
-  <label>Total Call Count</label><input type="number" id="calls">
-  <label>Active Staff Count</label><input type="number" id="activeStaff">
-
-  <h3 style="margin:24px 0 12px;color:#00d4ff;">Best Performers</h3>
-  <label>Overall Best – Name</label><input type="text" id="overallName">
+  <h3 style="color:#00d4ff;margin:30px 0 15px;">Best Performers</h3>
+  <label>Overall Best – Name</label><input type="text" id="overallName" value="Eshan">
   <label>Overall Best – Image URL</label><input type="text" id="overallImg">
-  <label>Overall Best – Collection (LKR)</label><input type="number" id="overallAmount">
+  <label>Overall Best – Collection</label><input type="number" id="overallAmount" value="5029283">
 
-  <label>Pre Due Best – Name</label><input type="text" id="predueName">
+  <label>Pre Due Best – Name</label><input type="text" id="predueName" value="Eshan">
   <label>Pre Due Best – Image URL</label><input type="text" id="predueImg">
-  <label>Pre Due Best – Collection (LKR)</label><input type="number" id="predueAmount">
+  <label>Pre Due Best – Collection</label><input type="number" id="predueAmount" value="4419213">
 
-  <label>Past Due Best – Name</label><input type="text" id="pastdueName">
+  <label>Past Due Best – Name</label><input type="text" id="pastdueName" value="Sandali">
   <label>Past Due Best – Image URL</label><input type="text" id="pastdueImg">
-  <label>Past Due Best – Collection (LKR)</label><input type="number" id="pastdueAmount">
+  <label>Past Due Best – Collection</label><input type="number" id="pastdueAmount" value="2149650">
 
-  <div id="msg" class="success hidden">SAVED TO CLOUD SUCCESSFULLY!</div>
-  <button class="btn" onclick="save()">Save to Cloud</button>
+  <button class="btn" onclick="generate()">Generate JSON → Copy & Replace in GitHub</button>
+  <div id="msg" class="msg" style="display:none;"></div>
+  <textarea id="output" style="margin-top:20px;height:200px;display:none;"></textarea>
 </div>
 
 <script>
-// YOUR CONFIG
-const firebaseConfig = {
-  apiKey: "AIzaSyBI1wea7fQkOAfSom4WOo1Ch6lsjt_MuIA",
-  authDomain: "oncredit-dashboard.firebaseapp.com",
-  projectId: "oncredit-dashboard",
-  storageBucket: "oncredit-dashboard.firebasestorage.app",
-  messagingSenderId: "442565003852",
-  appId: "1:442565003852:web:820bf17253e6921c4602e9"
-};
-firebase.initializeApp(firebaseConfig);
-const ref = firebase.database().ref('oncredit_dept_data');
-
-const ADMIN = { username: "admin", password: "oncredit2025" };
-
-function login(){
-  const u = document.getElementById('username').value.trim();
-  const p = document.getElementById('password').value;
-  if(u === ADMIN.username && p === ADMIN.password){
-    document.getElementById('login').classList.add('hidden');
-    document.getElementById('panel').classList.remove('hidden');
-    load();
-  } else {
-    document.getElementById('loginError').textContent = "Wrong username or password";
-  }
-}
-
-function load(){
-  ref.once('value').then(snap => {
-    const d = snap.val() || {};
-    const fields = ['target','collected','prolongation','restructure','calls','activeStaff',
-                    'overallName','overallImg','overallAmount',
-                    'predueName','predueImg','predueAmount',
-                    'pastdueName','pastdueImg','pastdueAmount'];
-    fields.forEach(f => document.getElementById(f).value = d[f] || '');
-  });
-}
-
-function save(){
+function generate() {
   const data = {
     target: Number(document.getElementById('target').value) || 0,
     collected: Number(document.getElementById('collected').value) || 0,
@@ -118,17 +70,14 @@ function save(){
     pastdueAmount: Number(document.getElementById('pastdueAmount').value) || 0,
     timestamp: new Date().toISOString()
   };
-  ref.set(data)
-    .then(() => {
-      document.getElementById('msg').textContent = "SAVED TO CLOUD SUCCESSFULLY!";
-      document.getElementById('msg').classList.remove('hidden');
-      setTimeout(() => document.getElementById('msg').classList.add('hidden'), 4000);
-    })
-    .catch(err => {
-      document.getElementById('msg').textContent = "SAVE FAILED: " + err.message;
-      document.getElementById('msg').style.color = "#ff6b6b";
-      document.getElementById('msg').classList.remove('hidden');
-    });
+
+  const jsonStr = JSON.stringify(data, null, 2);
+  document.getElementById('output').value = jsonStr;
+  document.getElementById('output').style.display = 'block';
+  document.getElementById('msg').textContent = 'COPY THE TEXT ABOVE → REPLACE IN data.json ON GITHUB';
+  document.getElementById('msg').className = 'msg success';
+  document.getElementById('msg').style.display = 'block';
+  document.getElementById('output').select();
 }
 </script>
 </body>
