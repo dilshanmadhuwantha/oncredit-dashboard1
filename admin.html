@@ -8,14 +8,16 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Inter',sans-serif;background:#0a192f;color:#e2e8f0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#0a192f;color:#e2e8f0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
 .box{background:#1e293b;padding:40px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.4);width:100%;max-width:500px;}
 h2{text-align:center;margin-bottom:24px;color:#00d4ff;font-weight:700;}
 label{display:block;margin:16px 0 6px;font-weight:600;color:#94a3b8;}
 input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;background:#0a192f;color:#e2e8f0;font-size:16px;}
 .btn{width:100%;padding:14px;background:#00d4ff;color:#0a192f;border:none;border-radius:8px;font-weight:600;cursor:pointer;margin-top:20px;transition:.3s;}
 .btn:hover{background:#00b0d4;}
-.success{color:#51cf66;text-align:center;margin:12px 0;}
+.success{color:#51cf66;text-align:center;margin:12px 0;font-weight:bold;}
+.error{color:#ff6b6b;text-align:center;margin:12px 0;}
 .hidden{display:none;}
 .back{position:absolute;top:20px;left:20px;color:#94a3b8;font-size:1.4rem;text-decoration:none;}
 </style>
@@ -28,11 +30,11 @@ input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;backgro
   <h2>Admin Login</h2>
   <input type="text" id="username" placeholder="Username">
   <input type="password" id="password" placeholder="Password">
+  <div id="error" class="error"></div>
   <button class="btn" onclick="login()">Login</button>
-  <div id="error" style="color:#ff6b6b;text-align:center;margin-top:10px;"></div>
 </div>
 
-<div class="box hidden" id="form">
+<div class="box hidden" id="panel">
   <h2>Update Department Data</h2>
 
   <label>Department Target (LKR)</label><input type="number" id="target">
@@ -55,7 +57,7 @@ input{padding:12px;border:1px solid #334155;border-radius:8px;width:100%;backgro
   <label>Past Due Best – Image URL</label><input type="text" id="pastdueImg">
   <label>Past Due Best – Collection (LKR)</label><input type="number" id="pastdueAmount">
 
-  <div id="msg" class="success hidden">Saved! All team members see new data instantly.</div>
+  <div id="msg" class="success hidden">Saved to Cloud! Refresh dashboard to see changes.</div>
   <button class="btn" onclick="save()">Save to Cloud</button>
 </div>
 
@@ -79,7 +81,7 @@ function login(){
   const p = document.getElementById('password').value;
   if(u === ADMIN.username && p === ADMIN.password){
     document.getElementById('login').classList.add('hidden');
-    document.getElementById('form').classList.remove('hidden');
+    document.getElementById('panel').classList.remove('hidden');
     load();
   } else {
     document.getElementById('error').textContent = "Wrong username or password";
@@ -119,7 +121,7 @@ function save(){
   ref.set(data).then(() => {
     document.getElementById('msg').classList.remove('hidden');
     setTimeout(() => document.getElementById('msg').classList.add('hidden'), 3000);
-  });
+  }).catch(err => alert("Save failed: " + err.message));
 }
 </script>
 </body>
