@@ -55,10 +55,23 @@ h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
 /* MUSIC */
 .music-toggle{position:fixed;bottom:20px;right:20px;background:#1e293b;padding:14px;border-radius:50%;box-shadow:0 4px 15px rgba(0,0,0,.5);cursor:pointer;color:#00d4ff;font-size:1.4rem;transition:.3s;z-index:1000;}
 .music-toggle:hover{transform:scale(1.1);background:#334155;}
+
+/* NO DATA */
 .no-data{text-align:center;padding:60px;color:#94a3b8;font-style:italic;font-size:1.1rem;}
+
+/* LOADING SPINNER */
+#loading{position:fixed;inset:0;background:#0a192f;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#00d4ff;font-size:1.5rem;z-index:9999;}
+#loading i{font-size:3rem;margin-bottom:20px;animation:spin 1s linear infinite;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
+
+<!-- LOADING SPINNER -->
+<div id="loading">
+  <i class="fas fa-spinner"></i>
+  <div>Loading live data from cloud...</div>
+</div>
 
 <div class="container">
   <header>
@@ -66,8 +79,9 @@ h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
     <p class="subtitle">November 2025 | Department Overview</p>
   </header>
 
-  <div id="noData" class="no-data">Loading live data...</div>
+  <div id="noData" class="no-data" style="display:none;">No data yet</div>
 
+  <!-- ROW 1 -->
   <div class="stats" id="row1" style="display:none;">
     <div class="card target"><h3>Department Target</h3><div class="value" id="deptTarget">-</div></div>
     <div class="card"><h3>Money Collected (YTD)</h3><div class="value" id="totalCollected">-</div></div>
@@ -75,17 +89,20 @@ h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
     <div class="card"><h3>Restructure Count</h3><div class="value" id="restructure">-</div><div class="target">Target: 100</div></div>
   </div>
 
+  <!-- ROW 2 -->
   <div class="stats" id="row2" style="display:none;">
     <div class="card"><h3>Total Call Count</h3><div class="value" id="totalCalls">-</div><div class="target">Target: 280,000</div></div>
     <div class="card"><h3>Active Staff</h3><div class="value" id="activeStaff">-</div><div class="target">Carder: 57</div></div>
   </div>
 
+  <!-- PROGRESS -->
   <div class="progress" id="progressSection" style="display:none;">
     <div class="progress-label">Collection Target Progress</div>
     <div class="bar-bg"><div id="progressFill" class="bar-fill"></div></div>
     <p id="progressText">0% achieved</p>
   </div>
 
+  <!-- BEST PERFORMERS -->
   <div class="performer-grid" id="performers" style="display:none;">
     <div class="performer">
       <div class="label">Overall bestperformer</div>
@@ -117,13 +134,14 @@ h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
   </div>
 </div>
 
+<!-- MUSIC -->
 <div class="music-toggle" id="musicToggle"><i class="fas fa-play" id="musicIcon"></i></div>
 <audio id="bgMusic" loop preload="auto">
   <source src="https://cdn.pixabay.com/download/audio/2023/03/23/audio_8f2d8f7c0a.mp3?filename=calm-ambient-1219.mp3" type="audio/mp3">
 </audio>
 
 <script>
-// YOUR FIREBASE CONFIG (already inserted)
+// Your Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyBI1wea7fQkOAfSom4WOo1Ch6lsjt_MuIA",
   authDomain: "oncredit-dashboard.firebaseapp.com",
@@ -134,13 +152,15 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const ref = db.ref('oncredit_dept_data');
+const ref = firebase.database().ref('oncredit_dept_data');
+
+const loading = document.getElementById('loading');
 
 function fmt(n){return (Number(n)||0).toLocaleString('en-LK');}
 function fmtLKR(n){return "LKR "+fmt(n);}
 
 ref.on('value', snap => {
+  loading.style.display = 'none';  // Hide spinner when data arrives
   const d = snap.val() || {};
   const has = d.target && d.collected !== undefined;
 
