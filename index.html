@@ -7,57 +7,88 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
 <style>
-/* (same beautiful styles as before – no change) */
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Inter',sans-serif;background:#0a192f;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;padding:20px;min-height:100vh;}
 .container{max-width:1200px;width:100%;}
+
+/* Header */
 header{text-align:center;margin-bottom:32px;}
 h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:32px;}
-.card{background:#1e293b;padding:24px;border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,.3);text-align:center;position:relative;overflow:hidden;}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#00d4ff,#18c6ff);}
+.subtitle{font-size:1rem;color:#94a3b8;margin-top:8px;}
+
+/* Cards */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:32px;}
+.card{background:#1e293b;padding:24px;border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,.4);text-align:center;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#00d4ff,#18c6ff);border-radius:20px 20px 0 0;}
 .card.target::before{background:linear-gradient(90deg,#ff8c00,#ff6b35);}
-.card h3{font-size:.95rem;color:#94a3b8;margin-bottom:8px;}
+.card h3{font-size:0.95rem;color:#94a3b8;margin-bottom:8px;font-weight:600;}
 .card .value{font-size:2.1rem;font-weight:800;color:#fff;}
-.progress{background:#1e293b;padding:28px;border-radius:20px;margin:32px 0;text-align:center;}
-.bar-bg{height:16px;background:#334155;border-radius:8px;overflow:hidden;margin:12px 0;}
-.bar-fill{height:100%;width:0%;background:#51cf66;transition:width 1.5s ease;box-shadow:0 0 15px rgba(81,207,102,.5);}
-.bar-fill.orange{background:#ff8c00;box-shadow:0 0 15px rgba(255,140,0,.5);}
-.bar-fill.red{background:#ff6b6b;box-shadow:0 0 15px rgba(255,107,107,.5);}
-.performer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin:32px 0;}
-.performer{background:#1e293b;padding:24px;border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,.3);text-align:center;}
-.performer img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #00d4ff;}
-.btn-group{display:flex;gap:16px;justify-content:center;margin:32px 0;}
-.btn{padding:14px 32px;border-radius:12px;border:none;font-weight:600;cursor:pointer;}
+.card .sub{font-size:0.9rem;color:#64b5f6;margin-top:6px;}
+
+/* Progress */
+.progress{background:#1e293b;padding:28px;border-radius:20px;margin:32px 0;text-align:center;box-shadow:0 8px 25px rgba(0,0,0,.4);}
+.bar-bg{height:18px;background:#334155;border-radius:9px;overflow:hidden;margin:12px 0;}
+.bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#51cf66,#69db7c);border-radius:9px;transition:width 1.8s ease;box-shadow:0 0 20px rgba(81,207,102,.6);}
+.bar-fill.orange{background:linear-gradient(90deg,#ff8c00,#ff6b35);box-shadow:0 0 20px rgba(255,140,0,.6);}
+.bar-fill.red{background:linear-gradient(90deg,#ff6b6b,#ff8c8c);box-shadow:0 0 20px rgba(255,107,107,.6);}
+.progress-label{font-size:1.2rem;color:#ff8c00;font-weight:600;}
+
+/* Performers */
+.performer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin:40px 0;}
+.performer{background:#1e293b;padding:28px;border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,.4);text-align:center;}
+.performer .label{color:#00d4ff;font-weight:700;font-size:0.9rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
+.performer img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:4px solid #00d4ff;margin:12px auto;}
+.performer h3{font-size:1.2rem;color:#fff;margin:10px 0;font-weight:700;}
+.performer .amount{font-size:1.4rem;color:#51cf66;font-weight:700;}
+
+/* Buttons */
+.btn-group{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:40px 0;}
+.btn{padding:16px 36px;border-radius:12px;border:none;font-weight:700;cursor:pointer;font-size:1rem;transition:.3s;}
 .btn-primary{background:#00d4ff;color:#0a192f;}
-.btn-primary:hover{background:#00b0d4;}
-.music-toggle{position:fixed;bottom:20px;right:20px;background:#1e293b;padding:14px;border-radius:50%;box-shadow:0 4px 15px rgba(0,0,0,.5);cursor:pointer;color:#00d4ff;font-size:1.4rem;}
+.btn-primary:hover{background:#00b8d4;}
+.btn-secondary{background:#334155;color:#e2e8f0;}
+.btn-secondary:hover{background:#475569;}
+
+/* Footer & Music */
+.footer{text-align:center;color:#94a3b8;font-size:0.9rem;margin-top:30px;}
+.music-toggle{position:fixed;bottom:24px;right:24px;background:#1e293b;padding:16px;border-radius:50%;box-shadow:0 6px 20px rgba(0,0,0,.6);cursor:pointer;color:#00d4ff;font-size:1.6rem;transition:.3s;z-index:1000;}
+.music-toggle:hover{transform:scale(1.15);background:#334155;}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <header><h1>Oncredit Collection Department</h1><p>November 2025</p></header>
+  <header>
+    <h1>Oncredit Collection Department</h1>
+    <p class="subtitle">November 2025 – Live Dashboard</p>
+  </header>
 
+  <!-- Stats Row 1 -->
   <div class="stats">
-    <div class="card target"><h3>Department Target</h3><div class="value" id="deptTarget">-</div></div>
-    <div class="card"><h3>Money Collected (YTD)</h3><div class="value" id="totalCollected">-</div></div>
-    <div class="card"><h3>Prolongation Count</h3><div class="value" id="prolongation">-</div></div>
-    <div class="card"><h3>Restructure Count</h3><div class="value" id="restructure">-</div></div>
-    <div class="card"><h3>Total Call Count</h3><div class="value" id="totalCalls">-</div></div>
-    <div class="card"><h3>Active Staff</h3><div class="value" id="activeStaff">-</div></div>
+    <div class="card target"><h3>Department Target</h3><div class="value" id="deptTarget">Loading...</div></div>
+    <div class="card"><h3>Money Collected (YTD)</h3><div class="value" id="totalCollected">Loading...</div></div>
+    <div class="card"><h3>Prolongation Count</h3><div class="value" id="prolongation">-</div><div class="sub">Target: 1,000</div></div>
+    <div class="card"><h3>Restructure Count</h3><div class="value" id="restructure">-</div><div class="sub">Target: 100</div></div>
   </div>
 
+  <!-- Stats Row 2 -->
+  <div class="stats">
+    <div class="card"><h3>Total Call Count</h3><div class="value" id="totalCalls">-</div><div class="sub">Target: 280,000</div></div>
+    <div class="card"><h3>Active Staff</h3><div class="value" id="activeStaff">-</div><div class="sub">Carder: 57</div></div>
+  </div>
+
+  <!-- Progress Bar -->
   <div class="progress">
-    <div class="progress-label">Collection Target Progress</div>
+    <div class="progress-label">Collection Target Achievement</div>
     <div class="bar-bg"><div id="progressFill" class="bar-fill"></div></div>
     <p id="progressText">0% achieved</p>
   </div>
 
+  <!-- Best Performers -->
   <div class="performer-grid">
-    <div class="performer"><div class="label">Overall Best</div><img id="overallImg"><h3 id="overallName">-</h3><div class="amount" id="overallAmount">-</div></div>
-    <div class="performer"><div class="label">Pre Due Best</div><img id="predueImg"><h3 id="predueName">-</h3><div class="amount" id="predueAmount">-</div></div>
-    <div class="performer"><div class="label">Past Due Best</div><img id="pastdueImg"><h3 id="pastdueName">-</h3><div class="amount" id="pastdueAmount">-</div></div>
+    <div class="performer"><div class="label">Overall Best Performer</div><img id="overallImg" src="" alt=""><h3 id="overallName">-</h3><div class="amount" id="overallAmount">-</div></div>
+    <div class="performer"><div class="label">Pre Due Best Performer</div><img id="predueImg" src="" alt=""><h3 id="predueName">-</h3><div class="amount" id="predueAmount">-</div></div>
+    <div class="performer"><div class="label">Past Due Best Performer</div><img id="pastdueImg" src="" alt=""><h3 id="pastdueName">-</h3><div class="amount" id="pastdueAmount">-</div></div>
   </div>
 
   <div class="btn-group">
@@ -68,39 +99,55 @@ h1{font-size:2.4rem;font-weight:800;color:#00d4ff;}
   <div class="footer">Last updated: <span id="lastUpdated">-</span></div>
 </div>
 
+<div class="music-toggle" id="musicToggle"><i class="fas fa-play" id="musicIcon"></i></div>
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2023/03/23/audio_8f2d8f7c0a.mp3" type="audio/mp3">
+</audio>
+
 <script>
-// Load data from data.json (GitHub raw – super fast)
-fetch('https://raw.githubusercontent.com/dilshanmadhuwantha/oncredit-dashboard1/main/data.json')
+// Load data from your data.json (instant!)
+fetch('https://raw.githubusercontent.com/dilshanmadhuwantha/oncredit-dashboard1/main/data.json?t=' + Date.now())
   .then(r => r.json())
   .then(d => {
-    document.getElementById('deptTarget').textContent = 'LKR ' + Number(d.target).toLocaleString();
-    document.getElementById('totalCollected').textContent = 'LKR ' + Number(d.collected).toLocaleString();
-    document.getElementById('prolongation').textContent = Number(d.prolongation).toLocaleString();
-    document.getElementById('restructure').textContent = Number(d.restructure).toLocaleString();
-    document.getElementById('totalCalls').textContent = Number(d.calls).toLocaleString();
+    document.getElementById('deptTarget').textContent = 'LKR ' + Number(d.target).toLocaleString('en-LK');
+    document.getElementById('totalCollected').textContent = 'LKR ' + Number(d.collected).toLocaleString('en-LK');
+    document.getElementById('prolongation').textContent = Number(d.prolongation).toLocaleString('en-LK');
+    document.getElementById('restructure').textContent = Number(d.restructure).toLocaleString('en-LK');
+    document.getElementById('totalCalls').textContent = Number(d.calls).toLocaleString('en-LK');
     document.getElementById('activeStaff').textContent = d.activeStaff;
 
-    const percent = d.target > 0 ? (d.collected / d.target) * 100 : 0;
+    const percent = d.target ? (d.collected / d.target) * 100 : 0;
     const fill = document.getElementById('progressFill');
     fill.style.width = percent.toFixed(1) + '%';
     if (percent < 50) fill.classList.add('red');
     else if (percent < 80) fill.classList.add('orange');
     document.getElementById('progressText').textContent = percent.toFixed(1) + '% achieved';
 
-    document.getElementById('overallImg').src = d.overallImg || 'https://via.placeholder.com/80';
-    document.getElementById('overallName').textContent = d.overallName;
-    document.getElementById('overallAmount').textContent = 'LKR ' + Number(d.overallAmount).toLocaleString();
+    document.getElementById('overallImg').src = d.overallImg || 'https://via.placeholder.com/90?text=No+Photo';
+    document.getElementById('overallName').textContent = d.overallName || '—';
+    document.getElementById('overallAmount').textContent = 'LKR ' + Number(d.overallAmount).toLocaleString('en-LK');
 
-    document.getElementById('predueImg').src = d.predueImg || 'https://via.placeholder.com/80';
-    document.getElementById('predueName').textContent = d.predueName;
-    document.getElementById('predueAmount').textContent = 'LKR ' + Number(d.predueAmount).toLocaleString();
+    document.getElementById('predueImg').src = d.predueImg || 'https://via.placeholder.com/90?text=No+Photo';
+    document.getElementById('predueName').textContent = d.predueName || '—';
+    document.getElementById('predueAmount').textContent = 'LKR ' + Number(d.predueAmount).toLocaleString('en-LK');
 
-    document.getElementById('pastdueImg').src = d.pastdueImg || 'https://via.placeholder.com/80';
-    document.getElementById('pastdueName').textContent = d.pastdueName;
-    document.getElementById('pastdueAmount').textContent = 'LKR ' + Number(d.pastdueAmount).toLocaleString();
+    document.getElementById('pastdueImg').src = d.pastdueImg || 'https://via.placeholder.com/90?text=No+Photo';
+    document.getElementById('pastdueName').textContent = d.pastdueName || '—';
+    document.getElementById('pastdueAmount').textContent = 'LKR ' + Number(d.pastdueAmount).toLocaleString('en-LK');
 
     document.getElementById('lastUpdated').textContent = new Date(d.timestamp).toLocaleString('en-GB');
   });
+
+// Music toggle
+const audio = document.getElementById('bgMusic');
+const toggle = document.getElementById('musicToggle');
+const icon = document.getElementById('musicIcon');
+let playing = false;
+toggle.onclick = () => {
+  playing ? audio.pause() : audio.play();
+  icon.className = playing ? 'fas fa-play' : 'fas fa-pause';
+  playing = !playing;
+};
 </script>
 </body>
 </html>
