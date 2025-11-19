@@ -1,18 +1,18 @@
 {
   "target": 496000000,
-  "collected": 229728462,
-  "prolongation": 598,
-  "restructure": 61,
-  "calls": 130538,
+  "collected": 236348404,
+  "prolongation": 626,
+  "restructure": 64,
+  "calls": 134168,
   "activeStaff": 55,
   "overallName": "Eshan",
   "overallImg": "https://i.ibb.co/zhC7JC8w/Screenshot-2025-11-13-135153.jpg",
-  "overallAmount": 5029283,
+  "overallAmount": 5348077,
   "predueName": "Eshan",
   "predueImg": "https://i.ibb.co/zhC7JC8w/Screenshot-2025-11-13-135153.jpg",
-  "predueAmount": 4419213,
+  "predueAmount": 4737907,
   "pastdueName": "Sandali",
   "pastdueImg": "https://i.ibb.co/GwthQxB/Screenshot-2025-11-18-133010.jpg",
-  "pastdueAmount": 2149650,
-  "timestamp": "2025-11-18T09:50:08.361Z"
+  "pastdueAmount": 2186230,
+  "timestamp": "2025-11-19T04:24:51.382Z"
 }
